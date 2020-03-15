@@ -15,7 +15,11 @@ spec:
       inputs:
         parameters:
           - name: info
-        #artifacts:
+        artifacts:
+          - name: source
+            path: /app
+            git:
+              repo: https://github.com/foldy-project/foldy-operator.git
         #  - name: my-input-artifact
         #    path: /my-input-artifact
         #    s3:
@@ -25,7 +29,11 @@ spec:
         command: [sh, -c]
         args:
           [
-            "until docker ps; do sleep 3; done; docker run --rm debian:latest cat /etc/os-release",
+            until docker ps;
+              do sleep 3;
+            done;
+            cd /app/foldy-operator;
+            docker build -f build/Dockerfile -t foldy/foldy-operator:latest .
           ]
         env:
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
