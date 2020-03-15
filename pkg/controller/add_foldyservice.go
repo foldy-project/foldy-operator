@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/thavlik/foldy-operator/pkg/controller/foldyservice"
+	"github.com/foldy-project/foldy-operator/pkg/controller/foldyservice"
 )
 
 func init() {

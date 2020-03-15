@@ -12,9 +12,9 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/rest"
 
-	"github.com/thavlik/foldy-operator/pkg/apis"
-	"github.com/thavlik/foldy-operator/pkg/controller"
-	"github.com/thavlik/foldy-operator/version"
+	"github.com/foldy-project/foldy-operator/pkg/apis"
+	"github.com/foldy-project/foldy-operator/pkg/controller"
+	"github.com/foldy-project/foldy-operator/version"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"

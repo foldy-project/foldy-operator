@@ -77,11 +77,13 @@ metadata:
 spec:
   experiment: basic-em # Model the experiment
   #image: foldy/trainer:latest
-  deepspeed:
-    enabled: true # use DeepSpeed for our huge model
-    fp16: true # use fp16
-    zeroOptimization: true # use Zero Redundancy Optimizer (ZeRO)
-  
+  #deepspeed:
+  #  enabled: true # use DeepSpeed for our huge model
+  #  fp16: true # use fp16
+  #  zeroOptimization: true # use Zero Redundancy Optimizer (ZeRO)
+  resources: # resources per trial
+    gpu: 1
+    cpu: 4
   config:
     # Specify any custom values in here. They will be available
     # in `spec.config` when `eval:` is used.
