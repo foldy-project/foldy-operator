@@ -5,11 +5,10 @@ metadata:
   namespace: argo-events
 spec:
   entrypoint: sync
-  #arguments:
-    #parameters:
-      #- name: appName
-      #  # the value will get overridden by event payload from test-dep
-      #  value: ''
+  arguments:
+    parameters:
+      - name: message
+        value: ""
   templates:
     - name: sync
       serviceAccountName: argo-events-sa
@@ -28,6 +27,3 @@ spec:
               secretKeyRef:
                 name: argo-token
                 key: token
-                
-
-
