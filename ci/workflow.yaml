@@ -15,11 +15,11 @@ spec:
       inputs:
         parameters:
           - name: info
-        artifacts:
-          - name: my-input-artifact
-            path: /my-input-artifact
-            s3:
-              key: path/in/bucket/my-input-artifact.tgz
+        #artifacts:
+        #  - name: my-input-artifact
+        #    path: /my-input-artifact
+        #    s3:
+        #      key: path/in/bucket/my-input-artifact.tgz
       container:
         image: docker:17.10
         command: [sh, -c]
