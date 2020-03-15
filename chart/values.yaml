@@ -4,7 +4,4 @@ minio:
   s3gateway:
     replicas: 2
     enabled: true
-    endpoint: https://sfo2.digitaloceanspaces.com
-
-
-
+    serviceEndpoint: https://sfo2.digitaloceanspaces.com
