@@ -5,8 +5,8 @@ metadata:
   namespace: argo-events
 spec:
   entrypoint: sync
-  arguments:
-    parameters:
+  #arguments:
+    #parameters:
       #- name: appName
       #  # the value will get overridden by event payload from test-dep
       #  value: ''
