@@ -21,7 +21,7 @@ spec:
         args: ["argocd app sync foldy-operator && echo $info"]
         env:
           - name: info
-            value: {{inputs.parameters.info}}
+            value: "{{inputs.parameters.info}}"
           - name: ARGOCD_SERVER
             value: argocd.foldy.dev
           - name: ARGOCD_AUTH_TOKEN
