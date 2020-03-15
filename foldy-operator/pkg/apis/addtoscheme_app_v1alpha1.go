@@ -1,7 +1,7 @@
 package apis
 
 import (
-	"github.com/foldy-project/foldy-operator/operator/pkg/apis/app/v1alpha1"
+	"github.com/foldy-project/foldy-operator/foldy-operator/pkg/apis/app/v1alpha1"
 )
 
 func init() {

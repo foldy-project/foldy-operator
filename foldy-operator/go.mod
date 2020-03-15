@@ -1,4 +1,4 @@
-module github.com/foldy-project/foldy-operator/operator
+module github.com/foldy-project/foldy-operator/foldy-operator
 
 go 1.13
 
