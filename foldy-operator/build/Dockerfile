@@ -17,7 +17,7 @@ ENV OPERATOR=/usr/local/bin/foldy-operator \
     USER_UID=1001 \
     USER_NAME=foldy-operator
 
-COPY --from=builder /go/src/github.com/foldy-project/foldy-operator/foldy-operator/foldy-operator /usr/local/bin/foldy-operator
+COPY --from=builder /go/src/github.com/foldy-project/foldy-operator/foldy-operator/foldy-operator ${OPERATOR}
 
 COPY build/bin /usr/local/bin
 RUN  /usr/local/bin/user_setup
