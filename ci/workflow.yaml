@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: ci-foldy-operator-
+spec:
+  entrypoint: whalesay
+  arguments:
+    parameters:
+      - name: message
+        # the value will get overridden by event payload from test-dep
+        value: hello world
+  templates:
+    - name: whalesay
+      serviceAccountName: argo-events-sa
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: docker/whalesay:latest
+        command: [cowsay]
+        args: ["{{inputs.parameters.message}}"]
