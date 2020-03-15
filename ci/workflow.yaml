@@ -3,19 +3,27 @@ kind: Workflow
 metadata:
   generateName: ci-foldy-operator-
 spec:
-  entrypoint: whalesay
+  entrypoint: sync
   arguments:
     parameters:
-      - name: message
-        # the value will get overridden by event payload from test-dep
-        value: hello world
+      #- name: appName
+      #  # the value will get overridden by event payload from test-dep
+      #  value: ''
   templates:
-    - name: whalesay
+    - name: sync
       serviceAccountName: argo-events-sa
-      inputs:
-        parameters:
-          - name: message
+      #inputs:
+      #  parameters:
+      #    - name: message
       container:
-        image: docker/whalesay:latest
-        command: [cowsay]
-        args: ["{{inputs.parameters.message}}"]
+        image: argoproj/argocd:latest
+        command: [bash, -c]
+        args: ["argocd app sync foldy-operator"]
+        env:
+          - name: ARGOCD_SERVER
+            value: argocd.foldy.dev
+          - name: ARGOCD_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: argo-token
+                key: token
