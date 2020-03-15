@@ -2,6 +2,6 @@ minio:
   enabled: true
   existingSecret: spaces-secret
   s3gateway:
-    replicas: 2
+    replicas: 3
     enabled: true
     serviceEndpoint: https://sfo2.digitaloceanspaces.com
