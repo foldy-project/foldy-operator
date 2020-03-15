@@ -6,4 +6,5 @@ minio:
     enabled: true
     endpoint: https://sfo2.digitaloceanspaces.com
 
-    
+
+
