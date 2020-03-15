@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: ci-foldy-operator-
+  namespace: argo-events
 spec:
   entrypoint: sync
   arguments:
@@ -27,3 +28,4 @@ spec:
               secretKeyRef:
                 name: argo-token
                 key: token
+                
