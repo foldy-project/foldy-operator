@@ -5,3 +5,5 @@ minio:
     replicas: 2
     enabled: true
     endpoint: https://sfo2.digitaloceanspaces.com
+
+    
