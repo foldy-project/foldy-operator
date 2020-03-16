@@ -63,8 +63,6 @@ spec:
                 key: password
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
             value: 127.0.0.1
-          - name: info
-            value: "{{inputs.parameters.info}}"
       sidecars:
         - name: dind
           image: docker:17.10-dind # Docker already provides an image for running a Docker daemon
@@ -80,10 +78,8 @@ spec:
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
-        args: ["argocd app sync foldy-operator && echo $info"]
+        args: ["argocd app sync foldy-operator"]
         env:
-          - name: info
-            value: "{{inputs.parameters.info}}"
           - name: ARGOCD_SERVER
             value: argocd.foldy.dev
           - name: ARGOCD_AUTH_TOKEN
