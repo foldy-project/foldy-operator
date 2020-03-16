@@ -29,4 +29,4 @@ spec:
             - name: OPERATOR_NAME
               value: "foldy-operator"
               name: LOCK_NAME
-              value: {{ .Release.Name }}-foldy-operator-lock
+              value: {{ .Release.Name }}-lock
