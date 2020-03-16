@@ -25,9 +25,11 @@ spec:
         command: [sh, -c]
         args:
           [
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stin;
             until docker ps;
               do sleep 3;
             done;
+            docker pull foldy/foldy-operator:deps;
             cd /app/foldy-operator;
             docker build -f build/Dockerfile.deps -t foldy/foldy-operator:deps . ;
             docker push foldy/foldy-operator:deps;
@@ -35,6 +37,16 @@ spec:
             docker push foldy/foldy-operator:latest;
           ]
         env:
+          - name: DOCKER_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: docker-creds
+                key: username
+          - name: DOCKER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: docker-creds
+                key: password
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
             value: 127.0.0.1
           - name: info
