@@ -32,9 +32,16 @@ spec:
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
             docker pull foldy/foldy-operator:deps || true;
             cd /app/foldy-operator;
-            docker build -f build/Dockerfile.deps -t foldy/foldy-operator:deps . ;
+            docker build
+              -f build/Dockerfile.deps
+              -t foldy/foldy-operator:deps
+              --cache-from foldy/foldy-operator:deps
+              . ;
             docker push foldy/foldy-operator:deps;
-            docker build -f build/Dockerfile -t foldy/foldy-operator:latest . ;
+            docker build
+              -f build/Dockerfile
+              -t foldy/foldy-operator:latest
+              . ;
             docker push foldy/foldy-operator:latest;
           ]
         env:

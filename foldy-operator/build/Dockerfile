@@ -14,7 +14,10 @@ ENV OPERATOR=/usr/local/bin/foldy-operator \
 COPY --from=deps /go/src/github.com/foldy-project/foldy-operator/foldy-operator/foldy-operator ${OPERATOR}
 
 COPY build/bin /usr/local/bin
-RUN /usr/local/bin/user_setup
+RUN ls -al /usr/local/bin/
+RUN chmod +x /usr/local/bin/user_setup \
+    && /usr/local/bin/user_setup
+RUN chmod +x /usr/local/bin/entrypoint
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
