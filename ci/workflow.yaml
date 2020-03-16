@@ -20,10 +20,6 @@ spec:
             path: /app
             git:
               repo: https://github.com/foldy-project/foldy-operator.git
-        #  - name: my-input-artifact
-        #    path: /my-input-artifact
-        #    s3:
-        #      key: path/in/bucket/my-input-artifact.tgz
       container:
         image: docker:17.10
         command: [sh, -c]
@@ -33,30 +29,64 @@ spec:
               do sleep 3;
             done;
             cd /app/foldy-operator;
-            docker build -f build/Dockerfile -t foldy/foldy-operator:latest .
-          ]
+            docker build -f build/Dockerfile.deps -t foldy/foldy-operator:deps . ;
+            docker push foldy/foldy-operator:deps;
+            docker build -f build/Dockerfile -t foldy/foldy-operator:latest . ;
+            docker push foldy/foldy-operator:latest;
+            ]
         env:
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
             value: 127.0.0.1
           - name: info
             value: "{{inputs.parameters.info}}"
-          - name: ARGOCD_SERVER
-            value: argocd.foldy.dev
-          - name: ARGOCD_AUTH_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: argo-token
-                key: token
-      sidecars:
-        - name: dind
-          image: docker:17.10-dind # Docker already provides an image for running a Docker daemon
-          securityContext:
-            privileged: true # the Docker daemon can only run in a privileged container
-          # mirrorVolumeMounts will mount the same volumes specified in the main container
-          # to the sidecar (including artifacts), at the same mountPaths. This enables
-          # dind daemon to (partially) see the same filesystem as the main container in
-          # order to use features such as docker volume binding.
-          mirrorVolumeMounts: true
+    #- name: build
+    #  serviceAccountName: argo-events-sa
+    #  inputs:
+    #    parameters:
+    #      - name: info
+    #    artifacts:
+    #      - name: source
+    #        path: /app
+    #        git:
+    #          repo: https://github.com/foldy-project/foldy-operator.git
+    #    #  - name: my-input-artifact
+    #    #    path: /my-input-artifact
+    #    #    s3:
+    #    #      key: path/in/bucket/my-input-artifact.tgz
+    #  container:
+    #    image: docker:17.10
+    #    command: [sh, -c]
+    #    args:
+    #      [
+    #        until docker ps;
+    #          do sleep 3;
+    #        done;
+    #        cd /app/foldy-operator;
+    #        docker build -f build/Dockerfile.deps -t foldy/foldy-operator:latest . ;
+    #        docker push foldy/foldy-operator:deps;
+    #      ]
+    #    env:
+    #      - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
+    #        value: 127.0.0.1
+    #      - name: info
+    #        value: "{{inputs.parameters.info}}"
+    #      - name: ARGOCD_SERVER
+    #        value: argocd.foldy.dev
+    #      - name: ARGOCD_AUTH_TOKEN
+    #        valueFrom:
+    #          secretKeyRef:
+    #            name: argo-token
+    #            key: token
+    #  sidecars:
+    #    - name: dind
+    #      image: docker:17.10-dind # Docker already provides an image for running a Docker daemon
+    #      securityContext:
+    #        privileged: true # the Docker daemon can only run in a privileged container
+    #      # mirrorVolumeMounts will mount the same volumes specified in the main container
+    #      # to the sidecar (including artifacts), at the same mountPaths. This enables
+    #      # dind daemon to (partially) see the same filesystem as the main container in
+    #      # order to use features such as docker volume binding.
+    #      mirrorVolumeMounts: true
     - name: sync
       serviceAccountName: argo-events-sa
       inputs:
