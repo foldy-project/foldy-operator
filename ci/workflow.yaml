@@ -98,7 +98,7 @@ spec:
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
-        args: ["argocd app sync foldy-operator && echo $info"]
+        args: ["argocd app sync foldy-operator"]
         env:
           - name: info
             value: "{{inputs.parameters.info}}"
@@ -109,7 +109,6 @@ spec:
               secretKeyRef:
                 name: argo-token
                 key: token
-
  
 
 
