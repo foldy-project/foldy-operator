@@ -70,6 +70,7 @@ rules:
   - app.foldy.dev
   resources:
   - '*'
+  - backends
   verbs:
   - create
   - delete
