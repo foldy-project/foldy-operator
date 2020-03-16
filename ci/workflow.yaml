@@ -4,17 +4,23 @@ metadata:
   generateName: ci-foldy-operator-
   namespace: argo-events
 spec:
-  entrypoint: build
+  entrypoint: main
   arguments:
     parameters:
       - name: info
         value: ""
   templates:
-    - name: build
-      serviceAccountName: argo-events-sa
+    - name: main
       inputs:
         parameters:
           - name: info
+      steps:
+        - - name: build
+            template: build
+          - name: sync
+            template: sync
+    - name: build
+      serviceAccountName: argo-events-sa
         artifacts:
           - name: source
             path: /app
