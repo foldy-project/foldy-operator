@@ -43,6 +43,7 @@ spec:
         command: [sh, -c] #
         args:
           [
+            echo $info;
             until docker ps;
               do sleep 3;
             done;
@@ -63,6 +64,8 @@ spec:
             docker push foldy/foldy-operator:latest;
           ]
         env:
+          - name: info
+            value: "{{inputs.parameters.info}}"
           - name: DOCKER_USERNAME
             valueFrom:
               secretKeyRef:
