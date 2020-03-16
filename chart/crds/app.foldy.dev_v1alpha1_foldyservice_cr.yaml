@@ -1,7 +1,0 @@
-apiVersion: app.foldy.dev/v1alpha1
-kind: FoldyService
-metadata:
-  name: example-foldyservice
-spec:
-  # Add fields here
-  size: 3

@@ -83,8 +83,14 @@ func main() {
 	}
 
 	ctx := context.TODO()
+
+	lockName := "foldy-operator-lock"
+	if lockNameOverride, ok := os.LookupEnv("LOCK_NAME"); ok {
+		lockName = lockNameOverride
+	}
+
 	// Become the leader before proceeding
-	err = leader.Become(ctx, "foldy-operator-lock")
+	err = leader.Become(ctx, lockName)
 	if err != nil {
 		log.Error(err, "")
 		os.Exit(1)
