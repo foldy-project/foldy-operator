@@ -11,6 +11,7 @@ spec:
         value: ""
   templates:
     - name: main
+      serviceAccountName: argo-events-sa
       inputs:
         parameters:
           - name: info
