@@ -4,7 +4,7 @@ metadata:
   generateName: ci-foldy-operator-
   namespace: argo-events
 spec:
-  entrypoint: build
+  entrypoint: main
   arguments:
     parameters:
       - name: info
