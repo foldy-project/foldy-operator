@@ -94,7 +94,7 @@ spec:
       inputs:
         parameters:
           - name: info
-          
+
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
@@ -110,3 +110,4 @@ spec:
                 name: argo-token
                 key: token
 
+ 
