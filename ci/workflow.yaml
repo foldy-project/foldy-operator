@@ -94,11 +94,10 @@ spec:
       inputs:
         parameters:
           - name: commit
-
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
-        args: ["argocd app sync foldy-operator"]
+        args: ["argocd app sync foldy-ci"]
         env:
           - name: commit
             value: "{{inputs.parameters.commit}}"
