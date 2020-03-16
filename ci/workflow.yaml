@@ -7,32 +7,32 @@ spec:
   entrypoint: main
   arguments:
     parameters:
-      - name: info
+      - name: commit
         value: ""
   templates:
     - name: main
       serviceAccountName: argo-events-sa
       inputs:
         parameters:
-          - name: info
+          - name: commit
       steps:
         - - name: build
             template: build
             arguments:
               parameters:
-              - name: info
-                value: "{{inputs.parameters.info}}"
+              - name: commit
+                value: "{{inputs.parameters.commit}}"
         - - name: sync
             template: sync
             arguments:
               parameters:
-              - name: info
-                value: "{{inputs.parameters.info}}"
+              - name: commit
+                value: "{{inputs.parameters.commit}}"
     - name: build
       serviceAccountName: argo-events-sa
       inputs:
         parameters:
-          - name: info
+          - name: commit
         artifacts:
           - name: source
             path: /app
@@ -43,7 +43,7 @@ spec:
         command: [sh, -c] #
         args:
           [
-            echo $info;
+            echo $commit;
             until docker ps;
               do sleep 3;
             done;
@@ -65,8 +65,8 @@ spec:
           ]
 
         env:
-          - name: info
-            value: "{{inputs.parameters.info}}"
+          - name: commit
+            value: "{{inputs.parameters.commit}}"
           - name: DOCKER_USERNAME
             valueFrom:
               secretKeyRef:
@@ -93,15 +93,15 @@ spec:
       serviceAccountName: argo-events-sa
       inputs:
         parameters:
-          - name: info
+          - name: commit
 
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
         args: ["argocd app sync foldy-operator"]
         env:
-          - name: info
-            value: "{{inputs.parameters.info}}"
+          - name: commit
+            value: "{{inputs.parameters.commit}}"
           - name: ARGOCD_SERVER
             value: argocd.foldy.dev
           - name: ARGOCD_AUTH_TOKEN
