@@ -10,21 +10,19 @@ spec:
       - name: info
         value: ""
   templates:
-    #- name: main
-    #  serviceAccountName: argo-events-sa
-    #  inputs:
-    #    parameters:
-    #      - name: info
-    #  steps:
-    #    - - name: build
-    #        template: build
-    #      - name: sync
-    #        template: sync
-    - name: build
+    - name: main
+      serviceAccountName: argo-events-sa
       inputs:
         parameters:
           - name: info
+      steps:
+        - - name: build
+            template: build
+          - name: sync
+            template: sync
+    - name: build
       serviceAccountName: argo-events-sa
+      inputs:
         artifacts:
           - name: source
             path: /app
