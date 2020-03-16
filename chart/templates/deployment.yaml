@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-foldy-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}-foldy-operator
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}-foldy-operator
+    spec:
+      serviceAccountName: {{ .Release.Name }}-foldy-operator
+      containers:
+        - name: foldy-operator
+          image: foldy/foldy-operator:latest
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              value: {{ .Values.watchNamespace }}
+            - name: POD_NAME
+              value: {{ .Release.Name }}-example-pod
+            - name: OPERATOR_NAME
+              value: "foldy-operator"

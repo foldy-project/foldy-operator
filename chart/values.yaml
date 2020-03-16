@@ -5,3 +5,5 @@ minio:
     replicas: 3
     enabled: true
     serviceEndpoint: https://sfo2.digitaloceanspaces.com
+
+watchNamespace: ci
