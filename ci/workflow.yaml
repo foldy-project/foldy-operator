@@ -63,6 +63,7 @@ spec:
               . ;
             docker push foldy/foldy-operator:latest;
           ]
+          
         env:
           - name: info
             value: "{{inputs.parameters.info}}"
