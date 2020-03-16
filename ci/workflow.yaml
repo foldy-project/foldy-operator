@@ -22,14 +22,15 @@ spec:
               repo: https://github.com/foldy-project/foldy-operator.git
       container:
         image: docker:17.10
-        command: [sh, -c]
+        command: [sh, -c] #
         args:
           [
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stin;
             until docker ps;
               do sleep 3;
             done;
-            docker pull foldy/foldy-operator:deps;
+            set -e;
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
+            docker pull foldy/foldy-operator:deps || true;
             cd /app/foldy-operator;
             docker build -f build/Dockerfile.deps -t foldy/foldy-operator:deps . ;
             docker push foldy/foldy-operator:deps;

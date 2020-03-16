@@ -1,10 +1,10 @@
 FROM foldy/foldy-operator:deps AS deps
+COPY . .
 RUN go build \
     -o foldy-operator \
     -gcflags all=-trimpath=/go/src/github.com/foldy-project/foldy-operator \
     -asmflags all=-trimpath=/go/src/github.com/foldy-project/foldy-operator \
     github.com/foldy-project/foldy-operator/foldy-operator/cmd/manager
-
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 ENV OPERATOR=/usr/local/bin/foldy-operator \

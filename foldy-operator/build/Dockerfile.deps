@@ -4,4 +4,3 @@ WORKDIR /go/src/github.com/foldy-project/foldy-operator/foldy-operator
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
-COPY . .
