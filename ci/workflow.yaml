@@ -9,12 +9,15 @@ spec:
     parameters:
       - name: commit
         value: ""
+      - name: modified
+        value: []
   templates:
     - name: main
       serviceAccountName: argo-events-sa
       inputs:
         parameters:
           - name: commit
+          - name: modified
       steps:
         - - name: build
             template: build
@@ -22,8 +25,8 @@ spec:
               parameters:
               - name: commit
                 value: "{{inputs.parameters.commit}}"
-          - name: build-dashboard
-            template: build-dashboard
+          - name: dashboard
+            template: dashboard
             arguments:
               parameters:
               - name: commit
@@ -34,6 +37,8 @@ spec:
               parameters:
               - name: commit
                 value: "{{inputs.parameters.commit}}"
+              - name: modified
+                value: "{{inputs.parameters.modified}}"
     - name: build
       serviceAccountName: argo-events-sa
       inputs:
@@ -123,10 +128,7 @@ spec:
               --cache-from foldy/dashboard:deps
               . ;
             docker push foldy/dashboard:deps;
-            docker build
-              -f Dockerfile
-              -t foldy/dashboard:$commit
-              . ;
+            docker build -t foldy/dashboard:$commit . ;
             docker push foldy/dashboard:$commit;
           ]
         env:
@@ -159,10 +161,12 @@ spec:
       inputs:
         parameters:
           - name: commit
+          - name: modified
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
         args: [
+          echo $modified;
           argocd app set foldy-ci -p operator.image=foldy/foldy-operator:$commit;
           argocd app sync foldy-ci;
           ]

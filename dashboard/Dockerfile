@@ -1,7 +1,6 @@
 FROM foldy/dashboard:deps as deps
 COPY . .
-RUN flutter build web
+RUN flutter create . && flutter build web
 
-# Stage 2 - Create the run-time image
-FROM nginx
+FROM nginx:1.17.9-alpine
 COPY --from=deps /app/build/web /usr/share/nginx/html
