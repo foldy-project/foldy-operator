@@ -1,0 +1,264 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    workflows.argoproj.io/node-name: ci-foldy-operator-tnsg8[0].build
+    workflows.argoproj.io/template: '{"name":"build","inputs":{"parameters":[{"name":"commit","value":"fabe09a738572ae1bc97eaf6a2b633344c8f4ded"}],"artifacts":[{"name":"source","path":"/app","git":{"repo":"https://github.com/foldy-project/foldy-operator.git"}}]},"outputs":{},"metadata":{},"container":{"name":"","image":"docker:17.10","command":["sh","-c"],"args":["echo
+      $commit; until docker ps; do sleep 3; done; set -e; echo $DOCKER_PASSWORD |
+      docker login -u $DOCKER_USERNAME --password-stdin; docker pull foldy/foldy-operator:deps
+      || true; cd /app/foldy-operator; docker build -f build/Dockerfile.deps -t foldy/foldy-operator:deps
+      --cache-from foldy/foldy-operator:deps . ; docker push foldy/foldy-operator:deps;
+      docker build -f build/Dockerfile -t foldy/foldy-operator:$commit . ; docker
+      push foldy/foldy-operator:$commit;"],"env":[{"name":"commit","value":"fabe09a738572ae1bc97eaf6a2b633344c8f4ded"},{"name":"DOCKER_USERNAME","valueFrom":{"secretKeyRef":{"name":"docker-creds","key":"username"}}},{"name":"DOCKER_PASSWORD","valueFrom":{"secretKeyRef":{"name":"docker-creds","key":"password"}}},{"name":"DOCKER_HOST","value":"127.0.0.1"}],"resources":{"requests":{"cpu":"1","memory":"1Gi"}}},"sidecars":[{"name":"dind","image":"docker:17.10-dind","resources":{},"securityContext":{"privileged":true},"mirrorVolumeMounts":true}],"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"argo-minio.argo.svc.cluster.local:9000","bucket":"artifacts","insecure":true,"accessKeySecret":{"name":"argo-minio","key":"accesskey"},"secretKeySecret":{"name":"argo-minio","key":"secretkey"},"key":"ci-foldy-operator-tnsg8/ci-foldy-operator-tnsg8-1111720160"}},"serviceAccountName":"argo-events-sa"}'
+  creationTimestamp: "2020-03-17T01:56:15Z"
+  labels:
+    workflows.argoproj.io/completed: "false"
+    workflows.argoproj.io/workflow: ci-foldy-operator-tnsg8
+  name: ci-foldy-operator-tnsg8-1111720160
+  namespace: argo-events
+  ownerReferences:
+  - apiVersion: argoproj.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Workflow
+    name: ci-foldy-operator-tnsg8
+    uid: 6c03e986-fd15-42dc-93d0-d5ea3f40ef47
+  resourceVersion: "257898"
+  selfLink: /api/v1/namespaces/argo-events/pods/ci-foldy-operator-tnsg8-1111720160
+  uid: 823e0e85-04ec-4821-a750-b8f240b1df11
+spec:
+  containers:
+  - command:
+    - argoexec
+    - wait
+    env:
+    - name: ARGO_POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    image: argoproj/argoexec:v2.6.2
+    imagePullPolicy: IfNotPresent
+    name: wait
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /argo/podmetadata
+      name: podmetadata
+    - mountPath: /var/run/docker.sock
+      name: docker-sock
+      readOnly: true
+    - mountPath: /argo/secret/argo-minio
+      name: argo-minio
+      readOnly: true
+    - mountPath: /mainctrfs/app
+      name: input-artifacts
+      subPath: source
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: argo-events-sa-token-lrkdv
+      readOnly: true
+  - args:
+    - echo $commit; until docker ps; do sleep 3; done; set -e; echo $DOCKER_PASSWORD
+      | docker login -u $DOCKER_USERNAME --password-stdin; docker pull foldy/foldy-operator:deps
+      || true; cd /app/foldy-operator; docker build -f build/Dockerfile.deps -t foldy/foldy-operator:deps
+      --cache-from foldy/foldy-operator:deps . ; docker push foldy/foldy-operator:deps;
+      docker build -f build/Dockerfile -t foldy/foldy-operator:$commit . ; docker
+      push foldy/foldy-operator:$commit;
+    command:
+    - sh
+    - -c
+    env:
+    - name: commit
+      value: fabe09a738572ae1bc97eaf6a2b633344c8f4ded
+    - name: DOCKER_USERNAME
+      valueFrom:
+        secretKeyRef:
+          key: username
+          name: docker-creds
+    - name: DOCKER_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: password
+          name: docker-creds
+    - name: DOCKER_HOST
+      value: 127.0.0.1
+    image: docker:17.10
+    imagePullPolicy: IfNotPresent
+    name: main
+    resources:
+      requests:
+        cpu: "1"
+        memory: 1Gi
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /app
+      name: input-artifacts
+      subPath: source
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: argo-events-sa-token-lrkdv
+      readOnly: true
+  - image: docker:17.10-dind
+    imagePullPolicy: IfNotPresent
+    name: dind
+    resources: {}
+    securityContext:
+      privileged: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /app
+      name: input-artifacts
+      subPath: source
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: argo-events-sa-token-lrkdv
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  initContainers:
+  - command:
+    - argoexec
+    - init
+    env:
+    - name: ARGO_POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    image: argoproj/argoexec:v2.6.2
+    imagePullPolicy: IfNotPresent
+    name: init
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /argo/podmetadata
+      name: podmetadata
+    - mountPath: /argo/secret/argo-minio
+      name: argo-minio
+      readOnly: true
+    - mountPath: /argo/inputs/artifacts
+      name: input-artifacts
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: argo-events-sa-token-lrkdv
+      readOnly: true
+  nodeName: worker-pool-1vrq
+  priority: 0
+  restartPolicy: Never
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: argo-events-sa
+  serviceAccountName: argo-events-sa
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - downwardAPI:
+      defaultMode: 420
+      items:
+      - fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.annotations
+        path: annotations
+    name: podmetadata
+  - hostPath:
+      path: /var/run/docker.sock
+      type: Socket
+    name: docker-sock
+  - name: argo-minio
+    secret:
+      defaultMode: 420
+      items:
+      - key: accesskey
+        path: accesskey
+      - key: secretkey
+        path: secretkey
+      secretName: argo-minio
+  - emptyDir: {}
+    name: input-artifacts
+  - name: argo-events-sa-token-lrkdv
+    secret:
+      defaultMode: 420
+      secretName: argo-events-sa-token-lrkdv
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2020-03-17T01:56:18Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2020-03-17T01:56:19Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2020-03-17T01:56:19Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2020-03-17T01:56:15Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://88c0afdc7413e8e02c7424ed38de47e74afb5b4575dd6c5b016067cdeddbf913
+    image: docker:17.10-dind
+    imageID: docker-pullable://docker@sha256:eaf9c833c2f9fc049fa443f8739986898520228550a90e3f008ba6c7604ce131
+    lastState: {}
+    name: dind
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2020-03-17T01:56:19Z"
+  - containerID: docker://383e9b011aaba71432ec12d8da46e9a0a22b03a066c33cddd59c3705c07de530
+    image: docker:17.10
+    imageID: docker-pullable://docker@sha256:b2f95f06841fb297252244d9aecbd10e43b4349847db6711ce8ba0d8a1ac77ef
+    lastState: {}
+    name: main
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2020-03-17T01:56:19Z"
+  - containerID: docker://c559d78829a894fe47be8f18fc96804039b717cf8e8d088e1d3f5149b644d0ed
+    image: argoproj/argoexec:v2.6.2
+    imageID: docker-pullable://argoproj/argoexec@sha256:091c96a910f9746dd4be4335453b0d8dd35feb63e53efbd89bb9a5461681ce57
+    lastState: {}
+    name: wait
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2020-03-17T01:56:18Z"
+  hostIP: 10.138.97.51
+  initContainerStatuses:
+  - containerID: docker://48a45f84a76edcb7878ef603047dbe17451257f37a88a7d288ba6e3e92ed129f
+    image: argoproj/argoexec:v2.6.2
+    imageID: docker-pullable://argoproj/argoexec@sha256:091c96a910f9746dd4be4335453b0d8dd35feb63e53efbd89bb9a5461681ce57
+    lastState: {}
+    name: init
+    ready: true
+    restartCount: 0
+    state:
+      terminated:
+        containerID: docker://48a45f84a76edcb7878ef603047dbe17451257f37a88a7d288ba6e3e92ed129f
+        exitCode: 0
+        finishedAt: "2020-03-17T01:56:17Z"
+        reason: Completed
+        startedAt: "2020-03-17T01:56:17Z"
+  phase: Running
+  podIP: 10.244.0.232
+  podIPs:
+  - ip: 10.244.0.232
+  qosClass: Burstable
+  startTime: "2020-03-17T01:56:15Z"
