@@ -15,7 +15,7 @@ spec:
       serviceAccountName: {{ .Release.Name }}-foldy-operator
       containers:
         - name: foldy-operator
-          image: foldy/foldy-operator:latest
+          image: {{ .Values.operator.image }}
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

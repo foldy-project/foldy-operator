@@ -6,4 +6,7 @@ minio:
     enabled: true
     serviceEndpoint: https://sfo2.digitaloceanspaces.com
 
+operator:
+  image: foldy/foldy-operator:latest
+
 watchNamespace: ci

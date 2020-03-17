@@ -61,7 +61,7 @@ spec:
               -f build/Dockerfile
               -t foldy/foldy-operator:latest
               . ;
-            docker push foldy/foldy-operator:latest;
+            docker push foldy/foldy-operator:$commit;
           ]
 
         env:
@@ -97,7 +97,10 @@ spec:
       container:
         image: argoproj/argocd:latest
         command: [bash, -c]
-        args: ["argocd app sync foldy-ci"]
+        args: [
+          argocd app set foldy-ci -p operator.image=foldy/foldy-operator:$commit;
+          argocd app sync foldy-ci;
+          ]
         env:
           - name: commit
             value: "{{inputs.parameters.commit}}"
