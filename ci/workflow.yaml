@@ -22,6 +22,12 @@ spec:
               parameters:
               - name: commit
                 value: "{{inputs.parameters.commit}}"
+          - name: build-dashboard
+            template: build-dashboard
+            arguments:
+              parameters:
+              - name: commit
+                value: "{{inputs.parameters.commit}}"
         - - name: sync
             template: sync
             arguments:
@@ -40,7 +46,7 @@ spec:
               repo: https://github.com/foldy-project/foldy-operator.git
       container:
         image: docker:17.10
-        command: [sh, -c] #
+        command: [bash, -c] #
         args:
           [
             echo $commit;
@@ -62,6 +68,66 @@ spec:
               -t foldy/foldy-operator:$commit
               . ;
             docker push foldy/foldy-operator:$commit;
+          ]
+        env:
+          - name: commit
+            value: "{{inputs.parameters.commit}}"
+          - name: DOCKER_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: docker-creds
+                key: username
+          - name: DOCKER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: docker-creds
+                key: password
+          - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
+            value: 127.0.0.1
+      sidecars:
+        - name: dind
+          image: docker:17.10-dind # Docker already provides an image for running a Docker daemon
+          securityContext:
+            privileged: true # the Docker daemon can only run in a privileged container
+          # mirrorVolumeMounts will mount the same volumes specified in the main container
+          # to the sidecar (including artifacts), at the same mountPaths. This enables
+          # dind daemon to (partially) see the same filesystem as the main container in
+          # order to use features such as docker volume binding.
+          mirrorVolumeMounts: true
+    - name: build-dashboard
+      serviceAccountName: argo-events-sa
+      inputs:
+        parameters:
+          - name: commit
+        artifacts:
+          - name: source
+            path: /app
+            git:
+              repo: https://github.com/foldy-project/foldy-operator.git
+      container:
+        image: docker:17.10
+        command: [bash, -c] #
+        args:
+          [
+            echo $commit;
+            until docker ps;
+              do sleep 3;
+            done;
+            set -e;
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
+            docker pull foldy/dashboard:deps || true;
+            cd /app/dashboard;
+            docker build
+              -f Dockerfile.deps
+              -t foldy/dashboard:deps
+              --cache-from foldy/dashboard:deps
+              . ;
+            docker push foldy/dashboard:deps;
+            docker build
+              -f Dockerfile
+              -t foldy/dashboard:$commit
+              . ;
+            docker push foldy/dashboard:$commit;
           ]
         env:
           - name: commit
