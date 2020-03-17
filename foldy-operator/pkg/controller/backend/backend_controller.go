@@ -2,8 +2,11 @@ package backend
 
 import (
 	"context"
+	"fmt"
 
 	appv1alpha1 "github.com/foldy-project/foldy-operator/foldy-operator/pkg/apis/app/v1alpha1"
+	"github.com/go-logr/logr"
+	"github.com/hashicorp/go-multierror"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,6 +78,40 @@ type ReconcileBackend struct {
 	scheme *runtime.Scheme
 }
 
+func (r *ReconcileBackend) reconcileBackendPod(
+	instance *appv1alpha1.Backend,
+	i int,
+	logger logr.Logger,
+) error {
+	// Define a new Pod object
+	pod := newPodForCR(instance, i)
+
+	// Set Backend instance as the owner and controller
+	if err := controllerutil.SetControllerReference(instance, pod, r.scheme); err != nil {
+		return err
+	}
+
+	// Check if this Pod already exists
+	found := &corev1.Pod{}
+	err := r.client.Get(context.TODO(), types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, found)
+	if err != nil && errors.IsNotFound(err) {
+		logger.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
+		err = r.client.Create(context.TODO(), pod)
+		if err != nil {
+			return err
+		}
+
+		// Pod created successfully - don't requeue
+		return nil
+	} else if err != nil {
+		return err
+	}
+
+	// Pod already exists - don't requeue
+	logger.Info("Skip reconcile: Pod already exists", "Pod.Namespace", found.Namespace, "Pod.Name", found.Name, "Instance", i)
+	return nil
+}
+
 // Reconcile reads that state of the cluster for a Backend object and makes changes based on the state read
 // and what is in the Backend.Spec
 // TODO(user): Modify this Reconcile function to implement your Controller logic.  This example creates
@@ -101,49 +138,36 @@ func (r *ReconcileBackend) Reconcile(request reconcile.Request) (reconcile.Resul
 	}
 
 	reqLogger.Info("Renconciling backend instances", "Spec.Replicas", instance.Spec.Replicas)
-
-	// Ensure all replicas are running
-
-	// Update backend status as necessary
-
-	// Define a new Pod object
-	pod := newPodForCR(instance)
-
-	// Set Backend instance as the owner and controller
-	if err := controllerutil.SetControllerReference(instance, pod, r.scheme); err != nil {
-		return reconcile.Result{}, err
+	dones := make([]chan error, instance.Spec.Replicas, instance.Spec.Replicas)
+	for i := 0; i < instance.Spec.Replicas; i++ {
+		done := make(chan error, 1)
+		dones[i] = done
+		go func(i int, done chan<- error) {
+			done <- r.reconcileBackendPod(instance, i, reqLogger)
+			close(done)
+		}(i, done)
 	}
-
-	// Check if this Pod already exists
-	found := &corev1.Pod{}
-	err = r.client.Get(context.TODO(), types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, found)
-	if err != nil && errors.IsNotFound(err) {
-		reqLogger.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
-		err = r.client.Create(context.TODO(), pod)
-		if err != nil {
-			return reconcile.Result{}, err
+	var multi error
+	for _, done := range dones {
+		if err := <-done; err != nil {
+			multi = multierror.Append(multi, err)
 		}
-
-		// Pod created successfully - don't requeue
-		return reconcile.Result{}, nil
-	} else if err != nil {
+	}
+	if multi != nil {
 		return reconcile.Result{}, err
 	}
 
-	// Pod already exists - don't requeue
-	reqLogger.Info("Skip reconcile: Pod already exists", "Pod.Namespace", found.Namespace, "Pod.Name", found.Name)
 	return reconcile.Result{}, nil
 }
 
 // newPodForCR returns a busybox pod with the same name/namespace as the cr
-func newPodForCR(cr *appv1alpha1.Backend) *corev1.Pod {
-
+func newPodForCR(cr *appv1alpha1.Backend, i int) *corev1.Pod {
 	labels := map[string]string{
 		"app": cr.Name,
 	}
 	return &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      cr.Name + "-pod",
+			Name:      fmt.Sprintf("%s-pod-%d", cr.Name, i),
 			Namespace: cr.Namespace,
 			Labels:    labels,
 		},
