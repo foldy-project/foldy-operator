@@ -9,4 +9,7 @@ minio:
 operator:
   image: foldy/foldy-operator:latest
 
+dashboard:
+  image: foldy/dashboard:latest
+
 watchNamespace: ci

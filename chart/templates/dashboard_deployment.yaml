@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dashboard
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-dashboard
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: {{ .Values.dashboard.image }}
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 80
+
