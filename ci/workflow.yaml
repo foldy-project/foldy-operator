@@ -46,7 +46,7 @@ spec:
               repo: https://github.com/foldy-project/foldy-operator.git
       container:
         image: docker:18.09.6
-        command: [bash, -c] #
+        command: [sh, -c] #
         args:
           [
             echo $commit;
@@ -106,7 +106,7 @@ spec:
               repo: https://github.com/foldy-project/foldy-operator.git
       container:
         image: docker:18.09.6
-        command: [bash, -c] #
+        command: [sh, -c] #
         args:
           [
             echo $commit;
