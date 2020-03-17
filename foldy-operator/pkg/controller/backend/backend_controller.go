@@ -100,7 +100,7 @@ func (r *ReconcileBackend) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, err
 	}
 
-	log.Info("HELLO", instance.ObjectMeta.Name, "Spec.Replicas", instance.Spec.Replicas)
+	reqLogger.Info("Renconciling backend instances", "Spec.Replicas", instance.Spec.Replicas)
 
 	// Ensure all replicas are running
 
