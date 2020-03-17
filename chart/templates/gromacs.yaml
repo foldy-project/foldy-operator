@@ -1,0 +1,6 @@
+apiVersion: app.foldy.dev/v1alpha1
+kind: Backend
+metadata:
+  name: gromacs
+spec:
+  size: 3

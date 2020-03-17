@@ -136,7 +136,7 @@ func newPodForCR(cr *appv1alpha1.Backend) *corev1.Pod {
 	}
 	return &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      cr.Name + "-pod",
+			Name:      cr.Name + "-backend-pod",
 			Namespace: cr.Namespace,
 			Labels:    labels,
 		},
