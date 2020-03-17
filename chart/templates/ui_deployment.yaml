@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-dashboard
+  name: {{ .Release.Name }}-ui
 spec:
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-dashboard
+      app: {{ .Release.Name }}-ui
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-dashboard
+        app: {{ .Release.Name }}-ui
     spec:
       containers:
-      - name: dashboard
-        image: {{ .Values.dashboard.image }}
+      - name: ui
+        image: {{ .Values.ui.image }}
         resources:
           limits:
             memory: "128Mi"

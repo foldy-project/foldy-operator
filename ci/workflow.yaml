@@ -25,8 +25,8 @@ spec:
               parameters:
               - name: commit
                 value: "{{inputs.parameters.commit}}"
-          - name: dashboard
-            template: dashboard
+          - name: ui
+            template: ui
             arguments:
               parameters:
               - name: commit
@@ -99,7 +99,7 @@ spec:
           # dind daemon to (partially) see the same filesystem as the main container in
           # order to use features such as docker volume binding.
           mirrorVolumeMounts: true
-    - name: dashboard
+    - name: ui
       serviceAccountName: argo-events-sa
       inputs:
         parameters:
@@ -120,16 +120,16 @@ spec:
             done;
             set -e;
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
-            docker pull foldy/dashboard:deps || true;
-            cd /app/dashboard;
+            docker pull foldy/ui:deps || true;
+            cd /app/ui;
             docker build
               -f Dockerfile.deps
-              -t foldy/dashboard:deps
-              --cache-from foldy/dashboard:deps
+              -t foldy/ui:deps
+              --cache-from foldy/ui:deps
               . ;
-            docker push foldy/dashboard:deps;
-            docker build -t foldy/dashboard:$commit . ;
-            docker push foldy/dashboard:$commit;
+            docker push foldy/ui:deps;
+            docker build -t foldy/ui:$commit . ;
+            docker push foldy/ui:$commit;
           ]
         env:
           - name: commit
@@ -168,7 +168,7 @@ spec:
         args: [
           echo $modified;
           argocd app set foldy-ci -p operator.image=foldy/foldy-operator:$commit;
-          argocd app set foldy-ci -p dashboard.image=foldy/dashboard:$commit;
+          argocd app set foldy-ci -p ui.image=foldy/ui:$commit;
           argocd app sync foldy-ci;
           ]
         env:
