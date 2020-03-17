@@ -93,7 +93,7 @@ spec:
             value: overlay # https://github.com/docker/for-linux/issues/711#issuecomment-511450495
       sidecars:
         - name: dind
-          image: docker:latest-dind # Docker already provides an image for running a Docker daemon
+          image: docker:dind # Docker already provides an image for running a Docker daemon
           securityContext:
             privileged: true # the Docker daemon can only run in a privileged container
           # mirrorVolumeMounts will mount the same volumes specified in the main container
@@ -152,7 +152,7 @@ spec:
             value: overlay
       sidecars:
         - name: dind
-          image: docker:latest-dind # Docker already provides an image for running a Docker daemon
+          image: docker:dind # Docker already provides an image for running a Docker daemon
           securityContext:
             privileged: true # the Docker daemon can only run in a privileged container
           # mirrorVolumeMounts will mount the same volumes specified in the main container
