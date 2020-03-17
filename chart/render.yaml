@@ -1,0 +1,1881 @@
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-configs/argocd-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-secret
+  labels:
+    app.kubernetes.io/name: argocd-secret
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+type: Opaque
+---
+# Source: foldy-operator/charts/argo/templates/workflow-controller-config-map.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: RELEASE-NAME-workflow-controller-configmap
+  labels:
+    chart: argo-0.7.2
+    release: RELEASE-NAME
+    heritage: Helm
+data:
+  config: |
+    containerRuntimeExecutor: docker
+    artifactRepository:
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-configs/argocd-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+data:
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    url: https://argocd.example.com
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-configs/argocd-rbac-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  labels:
+    app.kubernetes.io/name: argocd-rbac-cm
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-configs/argocd-ssh-known-hosts-cm.yaml
+apiVersion: v1
+data:
+  ssh_known_hosts: |
+    bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
+    github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+    gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
+    gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+    gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+    ssh.dev.azure.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
+    vs-ssh.visualstudio.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-ssh-known-hosts-cm
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+  name: argocd-ssh-known-hosts-cm
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-configs/argocd-tls-certs-cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-tls-certs-cm
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+  name: argocd-tls-certs-cm
+---
+# Source: foldy-operator/charts/events/templates/gateway-controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: RELEASE-NAME-gateway-controller-configmap
+  labels:
+    chart: events-0.7.0
+    release: RELEASE-NAME
+    heritage: Helm
+data:
+  config: |
+    instanceID: argo-events
+    namespace: argo-events
+---
+# Source: foldy-operator/charts/events/templates/sensor-controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: RELEASE-NAME-sensor-controller-configmap
+  labels:
+    chart: events-0.7.0
+    release: RELEASE-NAME
+    heritage: Helm
+data:
+  config: |
+    instanceID: argo-events
+    namespace: argo-events
+---
+# Source: foldy-operator/charts/minio/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: RELEASE-NAME-minio
+  labels:
+    app: minio
+    chart: minio-5.0.16
+    release: RELEASE-NAME
+    heritage: Helm
+data:
+  initialize: |-
+    #!/bin/sh
+    set -e ; # Have script exit in the event of a failed command.
+    MC_CONFIG_DIR="/etc/minio/mc/"
+    MC="/usr/bin/mc --config-dir ${MC_CONFIG_DIR}"
+    
+    # connectToMinio
+    # Use a check-sleep-check loop to wait for Minio service to be available
+    connectToMinio() {
+      SCHEME=$1
+      ATTEMPTS=0 ; LIMIT=29 ; # Allow 30 attempts
+      set -e ; # fail if we can't read the keys.
+      ACCESS=$(cat /config/accesskey) ; SECRET=$(cat /config/secretkey) ;
+      set +e ; # The connections to minio are allowed to fail.
+      echo "Connecting to Minio server: $SCHEME://$MINIO_ENDPOINT:$MINIO_PORT" ;
+      MC_COMMAND="${MC} config host add myminio $SCHEME://$MINIO_ENDPOINT:$MINIO_PORT $ACCESS $SECRET" ;
+      $MC_COMMAND ;
+      STATUS=$? ;
+      until [ $STATUS = 0 ]
+      do
+        ATTEMPTS=`expr $ATTEMPTS + 1` ;
+        echo \"Failed attempts: $ATTEMPTS\" ;
+        if [ $ATTEMPTS -gt $LIMIT ]; then
+          exit 1 ;
+        fi ;
+        sleep 2 ; # 1 second intervals between attempts
+        $MC_COMMAND ;
+        STATUS=$? ;
+      done ;
+      set -e ; # reset `e` as active
+      return 0
+    }
+    
+    # checkBucketExists ($bucket)
+    # Check if the bucket exists, by using the exit code of `mc ls`
+    checkBucketExists() {
+      BUCKET=$1
+      CMD=$(${MC} ls myminio/$BUCKET > /dev/null 2>&1)
+      return $?
+    }
+    
+    # createBucket ($bucket, $policy, $purge)
+    # Ensure bucket exists, purging if asked to
+    createBucket() {
+      BUCKET=$1
+      POLICY=$2
+      PURGE=$3
+    
+      # Purge the bucket, if set & exists
+      # Since PURGE is user input, check explicitly for `true`
+      if [ $PURGE = true ]; then
+        if checkBucketExists $BUCKET ; then
+          echo "Purging bucket '$BUCKET'."
+          set +e ; # don't exit if this fails
+          ${MC} rm -r --force myminio/$BUCKET
+          set -e ; # reset `e` as active
+        else
+          echo "Bucket '$BUCKET' does not exist, skipping purge."
+        fi
+      fi
+    
+      # Create the bucket if it does not exist
+      if ! checkBucketExists $BUCKET ; then
+        echo "Creating bucket '$BUCKET'"
+        ${MC} mb myminio/$BUCKET
+      else
+        echo "Bucket '$BUCKET' already exists."
+      fi
+    
+      # At this point, the bucket should exist, skip checking for existence
+      # Set policy on the bucket
+      echo "Setting policy of bucket '$BUCKET' to '$POLICY'."
+      ${MC} policy set $POLICY myminio/$BUCKET
+    }
+    
+    # Try connecting to Minio instance
+    scheme=http
+    connectToMinio $scheme
+---
+# Source: foldy-operator/charts/minio/templates/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: RELEASE-NAME-minio
+  labels:
+    app: minio
+    chart: minio-5.0.16
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Gi"
+---
+# Source: foldy-operator/charts/argo/templates/server-sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-server
+---
+# Source: foldy-operator/charts/argo/templates/workflow-controller-sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+---
+# Source: foldy-operator/charts/argocd/templates/dex/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-dex-server
+  labels:
+    app.kubernetes.io/name: argocd-dex-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: dex-server
+---
+# Source: foldy-operator/charts/events/templates/argo-events-sa.yaml
+# All argo-events services are bound to the "argo-events" service account.
+# In RBAC enabled setups, this SA is bound to specific roles.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-events-sa
+  namespace: default
+---
+# Source: foldy-operator/charts/minio/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "RELEASE-NAME-minio"
+  namespace: "default"
+---
+# Source: foldy-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: RELEASE-NAME-foldy-operator
+---
+# Source: foldy-operator/charts/events/templates/eventsource-crd.yaml
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: eventsources.argoproj.io
+spec:
+  group: argoproj.io
+  scope: Namespaced
+  names:
+    kind: EventSource
+    plural: eventsources
+    singular: eventsource
+    listKind: EventSourceList
+    shortNames:
+      - es
+  version: "v1alpha1"
+---
+# Source: foldy-operator/charts/events/templates/gateway-crd.yaml
+# Define a "gateway" custom resource definition
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: gateways.argoproj.io
+spec:
+  group: argoproj.io
+  names:
+    kind: Gateway
+    listKind: GatewayList
+    plural: gateways
+    singular: gateway
+    shortNames:
+      - gw
+  scope: Namespaced
+  version: "v1alpha1"
+---
+# Source: foldy-operator/charts/events/templates/sensor-crd.yaml
+# Define a "sensor" custom resource definition
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: sensors.argoproj.io
+spec:
+  group: argoproj.io
+  names:
+    kind: Sensor
+    listKind: SensorList
+    plural: sensors
+    singular: sensor
+    shortNames:
+      - sn
+  scope: Namespaced
+  version: v1alpha1
+---
+# Source: foldy-operator/charts/argo/templates/server-cluster-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: RELEASE-NAME-server-cluster-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workflowtemplates
+  - cronworkflows
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+---
+# Source: foldy-operator/charts/argo/templates/workflow-controller-clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: RELEASE-NAME-workflow-controller-cluster-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workflows/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+  - create
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflowtemplates
+  - workflowtemplates/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - cronworkflows
+  - cronworkflows/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: RELEASE-NAME-argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: RELEASE-NAME-argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+rules:
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs:
+      - delete
+      - get
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+    verbs:
+      - get
+---
+# Source: foldy-operator/charts/events/templates/argo-events-cluster-roles.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-events-role
+rules:
+
+  - apiGroups:
+    - apiextensions.k8s.io
+    - apiextensions.k8s.io/v1beta1
+    resources:
+    - customresourcedefinitions
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+      - argoproj.io
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    resources:
+      - workflows
+      - workflows/finalizers
+      - workflowtemplates
+      - workflowtemplates/finalizers
+      - gateways
+      - gateways/finalizers
+      - sensors
+      - sensors/finalizers
+      - eventsources
+      - eventsources/finalizers
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/exec
+      - configmaps
+      - secrets
+      - services
+      - events
+      - persistentvolumeclaims
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - "batch"
+    resources:
+      - jobs
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - "apps"
+    resources:
+      - deployments
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - update
+      - patch
+      - delete
+---
+# Source: foldy-operator/charts/argo/templates/server-crb.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: RELEASE-NAME-server-crb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: RELEASE-NAME-server-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: argo-server
+  namespace: default
+---
+# Source: foldy-operator/charts/argo/templates/workflow-controller-crb.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: RELEASE-NAME-workflow-controller-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: RELEASE-NAME-workflow-controller-cluster-role
+subjects:
+  - kind: ServiceAccount
+    name: argo
+    namespace: default
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: RELEASE-NAME-argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: RELEASE-NAME-argocd-application-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: default
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: RELEASE-NAME-argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: RELEASE-NAME-argocd-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: default
+---
+# Source: foldy-operator/charts/events/templates/argo-events-cluster-roles.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argo-events-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argo-events-role
+subjects:
+  - kind: ServiceAccount
+    name: argo-events-sa
+    namespace: default
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: RELEASE-NAME-argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  - appprojects
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - list
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: RELEASE-NAME-argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  - appprojects
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - list
+---
+# Source: foldy-operator/charts/argocd/templates/dex/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: RELEASE-NAME-argocd-dex-server
+  labels:
+    app.kubernetes.io/name: argocd-dex-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: dex-server
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: foldy-operator/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: RELEASE-NAME-foldy-operator
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - services/finalizers
+  - endpoints
+  - persistentvolumeclaims
+  - events
+  - configmaps
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - daemonsets
+  - replicasets
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - create
+- apiGroups:
+  - apps
+  resourceNames:
+  - foldy-operator
+  resources:
+  - deployments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  - deployments
+  verbs:
+  - get
+- apiGroups:
+  - app.foldy.dev
+  resources:
+  - '*'
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: RELEASE-NAME-argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: RELEASE-NAME-argocd-application-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: default
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: RELEASE-NAME-argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: RELEASE-NAME-argocd-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: default
+---
+# Source: foldy-operator/charts/argocd/templates/dex/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: RELEASE-NAME-argocd-dex-server
+  labels:
+    app.kubernetes.io/name: argocd-dex-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: dex-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: RELEASE-NAME-argocd-dex-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-dex-server
+  namespace: default
+---
+# Source: foldy-operator/templates/rolebinding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: RELEASE-NAME-foldy-operator
+subjects:
+- kind: ServiceAccount
+  name: RELEASE-NAME-foldy-operator
+roleRef:
+  kind: Role
+  name: RELEASE-NAME-foldy-operator
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: foldy-operator/charts/argo/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-server
+  labels:
+    chart: argo-0.7.2
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  ports:
+  - port: 2746
+    targetPort: 2746
+  selector:
+    app: RELEASE-NAME-server
+  sessionAffinity: None
+  type: ClusterIP
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+spec:
+  ports:
+  - name: https-controller
+    port: 8082
+    targetPort: 8082
+  selector:
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/name: argocd-application-controller
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-repo-server/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-repo-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: repo-server
+  name: RELEASE-NAME-argocd-repo-server
+spec:
+  ports:
+  - name: https-repo-server
+    protocol: TCP
+    port: 8081
+    targetPort: repo-server
+  selector:
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/name: argocd-repo-server
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: server
+  - name: https
+    protocol: TCP
+    port: 443
+    targetPort: server
+  selector:
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/name: argocd-server
+---
+# Source: foldy-operator/charts/argocd/templates/dex/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-argocd-dex-server
+  labels:
+    app.kubernetes.io/name: argocd-dex-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: dex-server
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5556
+    targetPort: http
+  - name: grpc
+    protocol: TCP
+    port: 5557
+    targetPort: grpc
+  selector:
+    app.kubernetes.io/name: argocd-dex-server
+    app.kubernetes.io/instance: RELEASE-NAME
+---
+# Source: foldy-operator/charts/argocd/templates/redis/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-argocd-redis
+  labels:
+    app.kubernetes.io/name: argocd-redis
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: redis
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app.kubernetes.io/name: argocd-redis
+---
+# Source: foldy-operator/charts/minio/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-minio
+  labels:
+    app: minio
+    chart: minio-5.0.16
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  selector:
+    app: minio
+    release: RELEASE-NAME
+---
+# Source: foldy-operator/templates/ui_service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-ui
+spec:
+  selector:
+    app: RELEASE-NAME-ui
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# Source: foldy-operator/charts/argo/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-server
+  labels:
+    chart: argo-0.7.2
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: RELEASE-NAME-server
+      release: RELEASE-NAME
+      app: RELEASE-NAME-server
+  template:
+    metadata:
+      labels:
+        app: RELEASE-NAME-server
+        release: RELEASE-NAME
+    spec:
+      serviceAccountName: "argo-server"
+      containers:
+        - name: argo-server
+          args:
+          - server
+          image: "argoproj/argocli:v2.6.1"
+          imagePullPolicy: Always
+          env:
+          - name: IN_CLUSTER
+            value: "true"
+          - name: ARGO_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: BASE_HREF
+            value: "/"
+          resources:
+            {}
+---
+# Source: foldy-operator/charts/argo/templates/workflow-controller-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-workflow-controller
+  labels:
+    app: RELEASE-NAME-workflow-controller
+    chart: argo-0.7.2
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: RELEASE-NAME-workflow-controller
+      release: RELEASE-NAME
+  template:
+    metadata:
+      labels:
+        app: RELEASE-NAME-workflow-controller
+        release: RELEASE-NAME
+    spec:
+      serviceAccountName: "argo"
+      containers:
+        - name: controller
+          image: "argoproj/workflow-controller:v2.6.1"
+          imagePullPolicy: Always
+          command: [ "workflow-controller" ]
+          args:
+          - "--configmap"
+          - "RELEASE-NAME-workflow-controller-configmap"
+          - "--executor-image"
+          - "argoproj/argoexec:v2.6.1"
+          - "--loglevel"
+          - "info"
+          - "--gloglevel"
+          - "0"
+          env:
+          - name: ARGO_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          resources:
+            {}
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-application-controller/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-argocd-application-controller
+  labels:
+    app.kubernetes.io/name: argocd-application-controller
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: application-controller
+    app.kubernetes.io/version: "v1.4.2"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller
+      app.kubernetes.io/instance: RELEASE-NAME
+  revisionHistoryLimit: 5
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-application-controller
+        helm.sh/chart: argocd-1.8.7
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/component: application-controller
+        app.kubernetes.io/version: "v1.4.2"
+    spec:
+      containers:
+      - command:
+        - argocd-application-controller
+        - --status-processors
+        - "20"
+        - --operation-processors
+        - "10"
+        - --repo-server
+        - RELEASE-NAME-argocd-repo-server:8081
+        - --loglevel
+        - info
+        - --redis
+        - RELEASE-NAME-argocd-redis:6379
+        image: argoproj/argocd:v1.4.2
+        imagePullPolicy: IfNotPresent
+        name: application-controller
+        ports:
+        - name: controller
+          containerPort: 8082
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          {}
+      serviceAccountName: argocd-application-controller
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-repo-server/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-argocd-repo-server
+  labels:
+    app.kubernetes.io/name: argocd-repo-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/version: "v1.4.2"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-repo-server
+      app.kubernetes.io/instance: RELEASE-NAME
+  revisionHistoryLimit: 5
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-repo-server
+        helm.sh/chart: argocd-1.8.7
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/component: repo-server
+        app.kubernetes.io/version: "v1.4.2"
+    spec:
+      containers:
+      - name: repo-server
+        image: argoproj/argocd:v1.4.2
+        imagePullPolicy: IfNotPresent
+        command:
+        - argocd-repo-server
+        - --redis
+        - RELEASE-NAME-argocd-redis:6379
+        - --loglevel
+        - info
+        volumeMounts:
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        ports:
+        - name: repo-server
+          containerPort: 8081
+          protocol: TCP
+        
+        livenessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          {}
+      serviceAccountName: default
+      volumes:
+      - configMap:
+          name: argocd-ssh-known-hosts-cm
+        name: ssh-known-hosts
+---
+# Source: foldy-operator/charts/argocd/templates/argocd-server/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-argocd-server
+  labels:
+    app.kubernetes.io/name: argocd-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: server
+    app.kubernetes.io/version: "v1.4.2"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+      app.kubernetes.io/instance: RELEASE-NAME
+  revisionHistoryLimit: 5
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-server
+        helm.sh/chart: argocd-1.8.7
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/component: server
+        app.kubernetes.io/version: "v1.4.2"
+    spec:
+      containers:
+      - name: server
+        image: argoproj/argocd:v1.4.2
+        imagePullPolicy: IfNotPresent
+        command:
+        - argocd-server
+        - --staticassets
+        - /shared/app
+        - --repo-server
+        - RELEASE-NAME-argocd-repo-server:8081
+        - --dex-server
+        - http://RELEASE-NAME-argocd-dex-server:5556
+        - --loglevel
+        - info
+        - --redis
+        - RELEASE-NAME-argocd-redis:6379
+        volumeMounts:
+        - mountPath: /app/config/ssh
+          name: ssh-known-hosts
+        ports:
+        - name: server
+          containerPort: 8080
+          protocol: TCP
+        
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          {}
+      serviceAccountName: argocd-server
+      volumes:
+      - emptyDir: {}
+        name: static-files
+      - configMap:
+          name: argocd-ssh-known-hosts-cm
+        name: ssh-known-hosts
+---
+# Source: foldy-operator/charts/argocd/templates/dex/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-argocd-dex-server
+  labels:
+    app.kubernetes.io/name: argocd-dex-server
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: dex-server
+    app.kubernetes.io/version: v2.14.0
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-dex-server
+      app.kubernetes.io/instance: RELEASE-NAME
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-dex-server
+        helm.sh/chart: argocd-1.8.7
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/component: dex-server
+        app.kubernetes.io/version: v2.14.0
+    spec:
+      initContainers:
+      - name: copyutil
+        image: argoproj/argocd:v1.4.2
+        imagePullPolicy: IfNotPresent
+        resources:
+          {}
+        command:
+        - cp
+        - /usr/local/bin/argocd-util
+        - /shared
+        volumeMounts:
+        - mountPath: /shared
+          name: static-files
+      containers:
+      - name: dex-server
+        image: quay.io/dexidp/dex:v2.14.0
+        imagePullPolicy: IfNotPresent
+        command:
+        - /shared/argocd-util
+        - rundex
+        ports:
+        - name: http
+          containerPort: 5556
+          protocol: TCP
+        - name: grpc
+          containerPort: 5557
+          protocol: TCP
+        volumeMounts:
+          - mountPath: /shared
+            name: static-files
+        resources:
+          {}
+      serviceAccountName: argocd-dex-server
+      volumes:
+        - emptyDir: {}
+          name: static-files
+---
+# Source: foldy-operator/charts/argocd/templates/redis/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-argocd-redis
+  labels:
+    app.kubernetes.io/name: argocd-redis
+    helm.sh/chart: argocd-1.8.7
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/version: 5.0.3    
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-redis
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-redis
+        helm.sh/chart: argocd-1.8.7
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/part-of: argocd
+        app.kubernetes.io/component: redis
+        app.kubernetes.io/version: 5.0.3
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: RELEASE-NAME-argocd-redis
+        args:
+        - --save
+        - ""
+        - --appendonly
+        - "no"
+        image: redis:5.0.3
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6379
+        resources:
+          {}
+---
+# Source: foldy-operator/charts/events/templates/gateway-controller-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-gateway-controller
+  labels:
+    app: RELEASE-NAME-gateway-controller
+    chart: events-0.7.0
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: RELEASE-NAME-gateway-controller
+      release: RELEASE-NAME
+  template:
+    metadata:
+      labels:
+        app: RELEASE-NAME-gateway-controller
+        release: RELEASE-NAME
+    spec:
+      serviceAccountName: argo-events-sa
+      containers:
+        - name: gateway-controller
+          image: "argoproj/gateway-controller:v0.12"
+          imagePullPolicy: Always
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CONTROLLER_CONFIG_MAP
+              value: RELEASE-NAME-gateway-controller-configmap
+---
+# Source: foldy-operator/charts/events/templates/sensor-controller-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-sensor-controller
+  labels:
+    app: RELEASE-NAME-sensor-controller
+    chart: events-0.7.0
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: RELEASE-NAME-sensor-controller
+      release: RELEASE-NAME
+  template:
+    metadata:
+      labels:
+        app: RELEASE-NAME-sensor-controller
+        release: RELEASE-NAME
+    spec:
+      serviceAccountName: argo-events-sa
+      containers:
+        - name: sensor-controller
+          image: "argoproj/sensor-controller:v0.12"
+          imagePullPolicy: Always
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CONTROLLER_CONFIG_MAP
+              value: RELEASE-NAME-sensor-controller-configmap
+---
+# Source: foldy-operator/charts/minio/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-minio
+  labels:
+    app: minio
+    chart: minio-5.0.16
+    release: RELEASE-NAME
+    heritage: Helm
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  replicas: 3
+  selector:
+    matchLabels:
+      app: minio
+      release: RELEASE-NAME
+  template:
+    metadata:
+      name: RELEASE-NAME-minio
+      labels:
+        app: minio
+        release: RELEASE-NAME
+      annotations:
+        rollme: "DTJe5"
+        checksum/secrets: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+        checksum/config: 63c3da4ecf8791aaef76ecef7a2ff65c7c828a4f25546e890cad3ba21ca55735
+    spec:
+      serviceAccountName: "RELEASE-NAME-minio"
+      containers:
+        - name: minio
+          image: "minio/minio:RELEASE.2020-03-06T22-23-56Z"
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/sh",
+          "-ce",
+          "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ gateway s3 https://sfo2.digitaloceanspaces.com" ]
+          volumeMounts:
+          ports:
+            - name: http
+              containerPort: 9000
+          #env:
+          #  - name: MINIO_ACCESS_KEY
+          #    valueFrom:
+          #      secretKeyRef:
+          #        name: spaces-secret
+          #        key: accesskey
+          #  - name: MINIO_SECRET_KEY
+          #    valueFrom:
+          #      secretKeyRef:
+          #        name: spaces-secret
+          #        key: secretkey
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /minio/health/ready
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+      volumes:
+        - name: minio-user
+          secret:
+            secretName: spaces-secret
+---
+# Source: foldy-operator/templates/operator_deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-foldy-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: RELEASE-NAME-foldy-operator
+  template:
+    metadata:
+      labels:
+        name: RELEASE-NAME-foldy-operator
+    spec:
+      serviceAccountName: RELEASE-NAME-foldy-operator
+      containers:
+        - name: foldy-operator
+          image: foldy/foldy-operator:latest
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "foldy-operator"
+              name: LOCK_NAME
+              value: RELEASE-NAME-lock
+---
+# Source: foldy-operator/templates/ui_deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-ui
+spec:
+  selector:
+    matchLabels:
+      app: RELEASE-NAME-ui
+  template:
+    metadata:
+      labels:
+        app: RELEASE-NAME-ui
+    spec:
+      containers:
+      - name: ui
+        image: foldy/foldy-ui:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 80
+---
+# Source: foldy-operator/templates/gromacs.yaml
+apiVersion: app.foldy.dev/v1alpha1
+kind: Backend
+metadata:
+  name: gromacs
+spec:
+  replicas: 3
+---
+# Source: foldy-operator/charts/argo/templates/workflow-aggregate-roles.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+  name: argo-aggregate-to-view
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workflows/finalizers
+  - workflowtemplates
+  - workflowtemplates/finalizers
+  - cronworkflows
+  - cronworkflows/finalizers
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: foldy-operator/charts/argo/templates/workflow-aggregate-roles.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+  name: argo-aggregate-to-edit
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workflows/finalizers
+  - workflowtemplates
+  - workflowtemplates/finalizers
+  - cronworkflows
+  - cronworkflows/finalizers
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: foldy-operator/charts/argo/templates/workflow-aggregate-roles.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+  name: argo-aggregate-to-admin
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workflows/finalizers
+  - workflowtemplates
+  - workflowtemplates/finalizers
+  - cronworkflows
+  - cronworkflows/finalizers
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch

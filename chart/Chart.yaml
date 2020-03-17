@@ -18,3 +18,15 @@ dependencies:
     repository: https://kubernetes-charts.storage.googleapis.com/
     version: 5.0.16
     condition: minio.enabled, global.minio.enabled
+  - name: argo
+    repository: https://argoproj.github.io/argo-helm
+    version: 0.7.2
+    condition: ci.enabled, global.ci.enabled
+  - name: argo-cd
+    repository: https://argoproj.github.io/argo-helm
+    version: 1.8.7
+    condition: ci.enabled, global.ci.enabled
+  - name: argo-events
+    repository: https://argoproj.github.io/argo-helm
+    version: 0.7.0
+    condition: ci.enabled, global.ci.enabled

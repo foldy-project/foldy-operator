@@ -1,6 +1,6 @@
 minio:
-  enabled: true
-  existingSecret: spaces-secret
+  enabled: false
+  #existingSecret: spaces-secret
   s3gateway:
     replicas: 3
     enabled: true
@@ -12,4 +12,17 @@ operator:
 ui:
   image: foldy/foldy-ui:latest
 
+ci:
+  enabled: true
+  repository: https://github.com/foldy-project/foldy-operator
+
+argo-cd:
+  installCRDs: false
+
+argo:
+  installCRD: false
+
+argo-events:
+  installCRD: false
+  
 watchNamespace: ci

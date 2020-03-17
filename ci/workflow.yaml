@@ -53,7 +53,7 @@ spec:
         image: docker:stable
         command: [sh, -c] #
         args:
-          [
+          [ 
             echo $commit;
             until docker ps;
               do sleep 3;
