@@ -131,12 +131,14 @@ func (r *ReconcileBackend) Reconcile(request reconcile.Request) (reconcile.Resul
 
 // newPodForCR returns a busybox pod with the same name/namespace as the cr
 func newPodForCR(cr *appv1alpha1.Backend) *corev1.Pod {
+	log.Info("Spec.Replicas", cr.Spec.Replicas)
+
 	labels := map[string]string{
 		"app": cr.Name,
 	}
 	return &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      cr.Name + "-backend-pod",
+			Name:      cr.Name + "-pod",
 			Namespace: cr.Namespace,
 			Labels:    labels,
 		},

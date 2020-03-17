@@ -3,4 +3,5 @@ kind: Backend
 metadata:
   name: gromacs
 spec:
-  size: 3
+  replicas: 3
+  
