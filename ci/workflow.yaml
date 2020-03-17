@@ -89,6 +89,8 @@ spec:
                 key: password
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
             value: 127.0.0.1
+          - name: DOCKER_DRIVER
+            value: overlay
       sidecars:
         - name: dind
           image: docker:18.09.6-dind # Docker already provides an image for running a Docker daemon
@@ -146,6 +148,8 @@ spec:
                 key: password
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
             value: 127.0.0.1
+          - name: DOCKER_DRIVER
+            value: overlay
       sidecars:
         - name: dind
           image: docker:18.09.6-dind # Docker already provides an image for running a Docker daemon
