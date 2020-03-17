@@ -10,7 +10,7 @@ spec:
       - name: commit
         value: ""
       - name: modified
-        value: []
+        value: ""
   templates:
     - name: main
       serviceAccountName: argo-events-sa
