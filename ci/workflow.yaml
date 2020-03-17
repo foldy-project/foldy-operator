@@ -50,7 +50,7 @@ spec:
             git:
               repo: https://github.com/foldy-project/foldy-operator.git
       container:
-        image: docker:18.09.6
+        image: docker:latest
         command: [sh, -c] #
         args:
           [
@@ -90,10 +90,10 @@ spec:
           - name: DOCKER_HOST # the docker daemon can be access on the standard port on localhost
             value: 127.0.0.1
           - name: DOCKER_DRIVER
-            value: overlay
+            value: overlay # https://github.com/docker/for-linux/issues/711#issuecomment-511450495
       sidecars:
         - name: dind
-          image: docker:18.09.6-dind # Docker already provides an image for running a Docker daemon
+          image: docker:latest-dind # Docker already provides an image for running a Docker daemon
           securityContext:
             privileged: true # the Docker daemon can only run in a privileged container
           # mirrorVolumeMounts will mount the same volumes specified in the main container
@@ -112,7 +112,7 @@ spec:
             git:
               repo: https://github.com/foldy-project/foldy-operator.git
       container:
-        image: docker:18.09.6
+        image: docker:latest
         command: [sh, -c] #
         args:
           [
@@ -152,7 +152,7 @@ spec:
             value: overlay
       sidecars:
         - name: dind
-          image: docker:18.09.6-dind # Docker already provides an image for running a Docker daemon
+          image: docker:latest-dind # Docker already provides an image for running a Docker daemon
           securityContext:
             privileged: true # the Docker daemon can only run in a privileged container
           # mirrorVolumeMounts will mount the same volumes specified in the main container
