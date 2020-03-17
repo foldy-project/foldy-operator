@@ -99,7 +99,7 @@ spec:
           # dind daemon to (partially) see the same filesystem as the main container in
           # order to use features such as docker volume binding.
           mirrorVolumeMounts: true
-    - name: build-dashboard
+    - name: dashboard
       serviceAccountName: argo-events-sa
       inputs:
         parameters:
