@@ -31,4 +31,3 @@ RUN flutter config --enable-web
 # Copy files to container and build
 WORKDIR /app
 COPY . .
-RUN flutter build web
