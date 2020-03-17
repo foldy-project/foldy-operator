@@ -59,7 +59,7 @@ spec:
             docker push foldy/foldy-operator:deps;
             docker build
               -f build/Dockerfile
-              -t foldy/foldy-operator:latest
+              -t foldy/foldy-operator:commit
               . ;
             docker push foldy/foldy-operator:$commit;
           ]
@@ -113,5 +113,5 @@ spec:
                 key: token
 
 
-                
+
 
