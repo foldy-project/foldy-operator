@@ -63,10 +63,6 @@ spec:
               . ;
             docker push foldy/foldy-operator:$commit;
           ]
-        resources:
-          limits:
-            cpu: 1000m # give me some MEAT
-            memory: 1Gi
         env:
           - name: commit
             value: "{{inputs.parameters.commit}}"
