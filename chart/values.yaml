@@ -6,6 +6,8 @@ ingress:
     host: argocd.foldy.dev
   events:
     host: events.foldy.dev
+  ui:
+    host: ui.foldy.dev
 
 operator:
   image: foldy/foldy-operator:latest
