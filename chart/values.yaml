@@ -1,18 +1,32 @@
 ingress:
   enabled: true
-  argo-cd:
+  letsencrypt:
+    email: keres993@gmail.com
+  argocd:
     host: argocd.foldy.dev
-    
+  events:
+    host: events.foldy.dev
+
 operator:
   image: foldy/foldy-operator:latest
 
 ui:
   image: foldy/foldy-ui:latest
 
-ci:
-  enabled: true
-  repository: https://github.com/foldy-project/foldy-operator
 
+ci: # deploy continuous integration stack along with application
+  enabled: true
+  github:
+    owner: foldy-project
+    repository: foldy-operator
+    repoURL: https://github.com/foldy-project/foldy-operator.git
+    apiToken:
+      name: github-access
+      key: token
+    webhookSecret:
+      name: github-access
+      key: secret
+  
 minio:
   enabled: false
   #existingSecret: spaces-secret
@@ -21,13 +35,13 @@ minio:
   #  enabled: true
   #  serviceEndpoint: https://sfo2.digitaloceanspaces.com
 
-argo-cd:
+argocd:
   installCRDs: false
 
 argo:
   installCRD: false
 
-argo-events:
+events:
   installCRD: false
 
 traefik:

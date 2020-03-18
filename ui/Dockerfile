@@ -1,4 +1,4 @@
-FROM foldy/ui:deps as deps
+FROM foldy/foldy-ui:deps as deps
 COPY . .
 RUN flutter create . && flutter build web
 

@@ -13,7 +13,7 @@ spec:
         value: ""
   templates:
     - name: main
-      serviceAccountName: argo-events-sa
+      serviceAccountName: ci-argo-events-sa
       inputs:
         parameters:
           - name: commit
@@ -40,7 +40,7 @@ spec:
               - name: modified
                 value: "{{inputs.parameters.modified}}"
     - name: build
-      serviceAccountName: argo-events-sa
+      serviceAccountName: ci-argo-events-sa
       inputs:
         parameters:
           - name: commit
@@ -100,7 +100,7 @@ spec:
           # order to use features such as docker volume binding.
           mirrorVolumeMounts: true
     - name: ui
-      serviceAccountName: argo-events-sa
+      serviceAccountName: ci-argo-events-sa
       inputs:
         parameters:
           - name: commit
@@ -120,16 +120,16 @@ spec:
             done;
             set -e;
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
-            docker pull foldy/ui:deps || true;
+            docker pull foldy/foldy-ui:deps || true;
             cd /app/ui;
             docker build
               -f Dockerfile.deps
-              -t foldy/ui:deps
-              --cache-from foldy/ui:deps
+              -t foldy/foldy-ui:deps
+              --cache-from foldy/foldy-ui:deps
               . ;
-            docker push foldy/ui:deps;
-            docker build -t foldy/ui:$commit . ;
-            docker push foldy/ui:$commit;
+            docker push foldy/foldy-ui:deps;
+            docker build -t foldy/foldy-ui:$commit . ;
+            docker push foldy/foldy-ui:$commit;
           ]
         env:
           - name: commit
@@ -157,7 +157,7 @@ spec:
           # order to use features such as docker volume binding.
           mirrorVolumeMounts: true
     - name: sync
-      serviceAccountName: argo-events-sa
+      serviceAccountName: ci-argo-events-sa
       inputs:
         parameters:
           - name: commit
@@ -168,7 +168,7 @@ spec:
         args: [
           echo $modified;
           argocd app set foldy-ci -p operator.image=foldy/foldy-operator:$commit;
-          argocd app set foldy-ci -p ui.image=foldy/ui:$commit;
+          argocd app set foldy-ci -p ui.image=foldy/foldy-ui:$commit;
           argocd app sync foldy-ci;
           ]
         env:

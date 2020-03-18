@@ -24,9 +24,11 @@ dependencies:
   - name: argo-cd
     repository: https://argoproj.github.io/argo-helm
     version: 1.8.7
+    alias: argocd
   - name: argo-events
     repository: https://argoproj.github.io/argo-helm
     version: 0.7.0
+    alias: events
   - name: traefik
     repository: https://containous.github.io/traefik-helm-chart
     version: 6.0.0
