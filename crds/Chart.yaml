@@ -1,0 +1,16 @@
+apiVersion: v1
+description: Dependencies chart for Foldy
+name: foldy-deps
+version: 0.0.0
+appVersion: master
+keywords:
+- protein
+- structure
+- prediction
+- dependencies
+home: https://foldy.dev
+sources:
+- https://github.com/foldy-project/foldy-operator
+maintainers:
+- name: Tom
+  email: info@foldy.dev

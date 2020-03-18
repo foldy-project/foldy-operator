@@ -1,0 +1,65 @@
+# Source: https://www.reddit.com/r/Traefik/comments/d36iry/traefik_20_with_certmanager/
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Release.Name }}-letsencrypt-prod
+    kubernetes.io/ingress.class: fake
+  labels:
+    traefik2: "true"
+  name: {{ .Release.Name }}-argocd-ingress
+spec:
+  rules:
+  - host: {{ .Values.ingress.argo-cd.host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .Release.Name }}-argocd-server
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - {{ .Values.ingress.argo-cd.host }}
+    secretName: argocd-secret
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Release.Name }}-https-only
+spec:
+  redirectScheme:
+    scheme: https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}-argocd-80
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`{{ .Values.ingress.argo-cd.host }}`) && PathPrefix(`/`)
+      kind: Rule
+      middlewares:
+        - name: {{ .Release.Name }}-https-only
+      services:
+        - name: {{ .Release.Name }}-argocd-server
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: argocd-secret
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: HostSNI(`{{ .Values.ingress.argo-cd.host }}`)
+      kind: Rule
+      services:
+        - name: {{ .Release.Name }}-argocd-server
+          port: 443
+  tls:
+    passthrough: true
+    secretName: argocd-secret
+    

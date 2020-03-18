@@ -11,5 +11,11 @@ dependencies:
 - name: argo-events
   repository: https://argoproj.github.io/argo-helm
   version: 0.7.0
-digest: sha256:4205cdef7d97e5bac4538917db85adc79ad1c245a0fef4ebeb89d05730e6c4a7
-generated: "2020-03-17T11:44:23.4001043-05:00"
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v0.14.0
+- name: traefik
+  repository: https://containous.github.io/traefik-helm-chart
+  version: 6.0.0
+digest: sha256:f693f546ad5a92703b8a472caa8aeed946ef020d7872b28714161c2719a3d645
+generated: "2020-03-17T20:09:00.3020414-05:00"

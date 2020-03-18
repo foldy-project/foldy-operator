@@ -1,11 +1,8 @@
-minio:
-  enabled: false
-  #existingSecret: spaces-secret
-  s3gateway:
-    replicas: 3
-    enabled: true
-    serviceEndpoint: https://sfo2.digitaloceanspaces.com
-
+ingress:
+  enabled: true
+  argo-cd:
+    host: argocd.foldy.dev
+    
 operator:
   image: foldy/foldy-operator:latest
 
@@ -16,6 +13,14 @@ ci:
   enabled: true
   repository: https://github.com/foldy-project/foldy-operator
 
+minio:
+  enabled: false
+  #existingSecret: spaces-secret
+  #s3gateway:
+  #  replicas: 3
+  #  enabled: true
+  #  serviceEndpoint: https://sfo2.digitaloceanspaces.com
+
 argo-cd:
   installCRDs: false
 
@@ -24,5 +29,10 @@ argo:
 
 argo-events:
   installCRD: false
-  
-watchNamespace: ci
+
+traefik:
+  enabled: true
+  additionalArguments:
+    - --providers.kubernetesingress=true
+    - --providers.kubernetesingress.ingressclass=traefik2
+
