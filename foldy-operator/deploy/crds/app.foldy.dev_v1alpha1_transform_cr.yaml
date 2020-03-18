@@ -1,0 +1,7 @@
+apiVersion: app.foldy.dev/v1alpha1
+kind: Transform
+metadata:
+  name: example-transform
+spec:
+  # Add fields here
+  size: 3

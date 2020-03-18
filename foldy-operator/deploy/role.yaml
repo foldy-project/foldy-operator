@@ -71,6 +71,10 @@ rules:
   resources:
   - '*'
   - backends
+  - experiments
+  - models
+  - datasets
+  - transforms
   verbs:
   - create
   - delete

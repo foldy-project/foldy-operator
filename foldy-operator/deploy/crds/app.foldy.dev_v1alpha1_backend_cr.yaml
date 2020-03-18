@@ -5,3 +5,5 @@ metadata:
 spec:
   # Add fields here
   size: 3
+  image: foldy/foldy-gromacs-backend:latest
+  imagePullPolicy: IfNotPresent

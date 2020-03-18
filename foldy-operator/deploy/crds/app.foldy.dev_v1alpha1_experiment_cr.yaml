@@ -1,0 +1,7 @@
+apiVersion: app.foldy.dev/v1alpha1
+kind: Experiment
+metadata:
+  name: example-experiment
+spec:
+  backend: example-backend
+  integrator: md

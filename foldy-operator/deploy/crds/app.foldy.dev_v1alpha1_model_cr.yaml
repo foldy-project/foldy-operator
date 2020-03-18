@@ -1,0 +1,6 @@
+apiVersion: app.foldy.dev/v1alpha1
+kind: Model
+metadata:
+  name: example-model
+spec:
+  experiment: example-experiment
