@@ -13,8 +13,11 @@ operator:
 ui:
   image: foldy/foldy-ui:latest
 
-
-ci: # deploy continuous integration stack along with application
+ci:
+  # Deploys a continuous integration stack that bootstraps
+  # chart deployment against a github repo.
+  # The webhook is generated for the project automatically, and only
+  # the apiToken needs to be populated with a value from Github.
   enabled: true
   github:
     owner: foldy-project
@@ -23,7 +26,7 @@ ci: # deploy continuous integration stack along with application
     apiToken:
       name: github-access
       key: token
-    webhookSecret:
+    webhookSecret: # the secret used to create the webhook
       name: github-access
       key: secret
   
