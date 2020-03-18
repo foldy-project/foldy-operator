@@ -3,10 +3,13 @@ ingress:
   letsencrypt:
     email: keres993@gmail.com
   argocd:
+    enabled: true
     host: argocd.foldy.dev
   events:
+    enabled: true
     host: events.foldy.dev
   ui:
+    enabled: true
     host: ui.foldy.dev
 
 operator:

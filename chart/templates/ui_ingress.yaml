@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress.enabled .Values.ingress.ui.enabled }}
 # Source: https://www.reddit.com/r/Traefik/comments/d36iry/traefik_20_with_certmanager/
 apiVersion: extensions/v1beta1
 kind: Ingress
