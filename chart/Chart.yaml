@@ -21,10 +21,10 @@ dependencies:
   - name: argo
     repository: https://argoproj.github.io/argo-helm
     version: 0.7.2
-  - name: argo-cd
-    repository: https://argoproj.github.io/argo-helm
-    version: 1.8.7
-    alias: argocd
+  #- name: argo-cd
+  #  repository: https://argoproj.github.io/argo-helm
+  #  version: 1.8.7
+  #  alias: argocd
   - name: argo-events
     repository: https://argoproj.github.io/argo-helm
     version: 0.7.0

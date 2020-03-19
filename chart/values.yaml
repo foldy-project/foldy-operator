@@ -5,6 +5,8 @@ ingress:
   argocd:
     enabled: true
     host: argocd.foldy.dev
+    serviceName: argocd-server.argocd.svc.cluster.local
+    secretName: argocd-secret
   events:
     enabled: true
     host: events.foldy.dev
@@ -42,9 +44,6 @@ minio:
   #  replicas: 3
   #  enabled: true
   #  serviceEndpoint: https://sfo2.digitaloceanspaces.com
-
-argocd:
-  installCRDs: false
 
 argo:
   installCRD: false

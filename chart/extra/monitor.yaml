@@ -1,0 +1,58 @@
+# Source: https://www.reddit.com/r/Traefik/comments/d36iry/traefik_20_with_certmanager/
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: ci-letsencrypt-prod
+    kubernetes.io/ingress.class: fake
+  labels:
+    traefik2: "true"
+  name: monitor-ingress
+  namespace: ci
+spec:
+  rules:
+  - host: monitor.foldy.dev
+    http:
+      paths:
+      - backend:
+          serviceName: ci-ui
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - monitor.foldy.dev
+    secretName: monitor-foldy-dev-tls
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: monitor-foldy-dev-80
+  namespace: ci
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`monitor.foldy.dev`) && PathPrefix(`/`)
+      kind: Rule
+      middlewares:
+        - name: ci-https-only
+      services:
+        - name: ci-ui
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: monitor-foldy-dev-tls
+  namespace: ci
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`monitor.foldy.dev`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: ci-ui
+          port: 80
+  tls:
+    secretName: monitor-foldy-dev-tls
