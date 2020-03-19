@@ -3,7 +3,11 @@ kind: Backend
 metadata:
   name: example-backend
 spec:
-  # Add fields here
-  size: 3
   image: foldy/foldy-gromacs-backend:latest
   imagePullPolicy: IfNotPresent
+  podSpec:
+    # Put arbitrary pod manifest in here. It will be mixed
+    # into the deployment, taking precedence.
+    resources:
+      limits:
+        cpu: 250m

@@ -3,5 +3,12 @@ kind: Transform
 metadata:
   name: example-transform
 spec:
-  # Add fields here
-  size: 3
+  image: foldy/foldy-proteinnet-transform:latest
+  imagePullPolicy: IfNotPresent
+  replicas: 3
+  podSpec:
+    # Put arbitrary pod manifest in here. It will be mixed
+    # into the deployment, taking precedence.
+    resources:
+      limits:
+        cpu: 250m
